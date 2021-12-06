@@ -98,6 +98,12 @@ class Ley:
         except:
             print("Error llenando articulos")
 
+    def setDerogacion(self, derogacion: str, fecha: str) ->None:
+        if derogacion == 'no derogado':
+            self.derogacion = derogacion
+        else:
+            self.derogacion = derogacion + " con fecha " + fecha
+
     def getDatos(self) -> None:  # Llena los elementos de la Ley
         soup = soupConsultarLey(self.idLey)  # Obtener soup
         self.setTituloNorma(soup)
@@ -110,7 +116,7 @@ class Ley:
         self.setListaTitulos(titulo)
         self.setListaParrafos(titulo)
         self.setListaArticulos(soup)
-        self.derogacion = str(soup.Promulgacion['derogado']) + " con fecha " + str(soup.Promulgacion['fechaVersion'])
+        self.setDerogacion(str(soup.Promulgacion['derogado']), str(soup.Promulgacion['fechaVersion']))
 
     def mostrarArticulos(self) -> None:
         for a in self.lista_articulos:
