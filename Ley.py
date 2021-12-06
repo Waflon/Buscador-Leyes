@@ -21,6 +21,7 @@ class Ley:
     organismo: str
     promulgacion: str
     publicacion: str
+    derogacion: str
     lista_titulos: list
     lista_parrafos: list
     lista_articulos: list
@@ -109,6 +110,7 @@ class Ley:
         self.setListaTitulos(titulo)
         self.setListaParrafos(titulo)
         self.setListaArticulos(soup)
+        self.derogacion = str(soup.Promulgacion['derogado']) + " con fecha " + str(soup.Promulgacion['fechaVersion'])
 
     def mostrarArticulos(self) -> None:
         for a in self.lista_articulos:
@@ -125,3 +127,5 @@ class Ley:
         print("Cantidad de articulos: " + str(len(self.lista_articulos)))
         print("Fecha de promulgación: " + self.promulgacion)
         print("Fecha de publicación: " + self.publicacion)
+        print("Estado: " + self.derogacion)
+
