@@ -32,8 +32,7 @@ class Ley:
         self.lista_titulos = []
         self.lista_parrafos = []
         self.lista_articulos = []
-
-        self.getDatos()
+        self.getDatos()  # llenar el resto de elementos
 
     def getDatos(self) -> None:  # Llena los elementos de la Ley
         try:
@@ -83,5 +82,3 @@ class Ley:
         print("Cantidad de articulos: " + str(len(self.lista_articulos)))
         print("Fecha de promulgación: " + self.promulgacion)
         print("Fecha de publicación: " + self.publicacion)
-
-
