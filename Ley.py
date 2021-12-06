@@ -3,9 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def soupConsultarLey(idLey: str):
+def soupConsultarLey(idLey: str) -> BeautifulSoup:
     try:
-        url = 'http://www.leychile.cl/Consulta/obtxml?opt=7&idLey=' + idLey
+        url = 'http://www.leychile.cl/Consulta/obtxml?opt=7&idLey=' + str(idLey)
         xml_data = requests.get(url).content  # Conseguir el contenido en xml
         print("Ley encontrada exitosamente")
         return BeautifulSoup(xml_data, "xml")  # objeto que contiene la sopita
@@ -18,7 +18,6 @@ class Ley:
     idLey: str
     idNorma: str
     tituloNorma: str
-    titulo: str
     organismo: str
     promulgacion: str
     publicacion: str
@@ -36,11 +35,7 @@ class Ley:
 
         self.getDatos()
 
-    def listar(self, lista: list, elementos):
-        for e in elementos:
-            lista.append(str(e.contents[0]))
-
-    def getDatos(self):
+    def getDatos(self):  # Llena los elementos de la Ley
         soup = soupConsultarLey(self.idLey)  # Obtener soup
 
         self.tituloNorma = str(soup.find('TituloNorma').contents[0])
@@ -51,10 +46,11 @@ class Ley:
         materias = soup.find_all("Materias")[0].find_all("Materia")
 
         titulo = soup.find('EstructurasFuncionales')
-        titulos = titulo.find_all('EstructuraFuncional', tipoParte="Título")  # 101 resultados
-        parrafos = titulo.findAll('EstructuraFuncional', tipoParte="Párrafo")  # 20 resultados
+        titulos = titulo.find_all('EstructuraFuncional', tipoParte="Título")
+        parrafos = titulo.findAll('EstructuraFuncional', tipoParte="Párrafo")
         articulos = soup.find_all("EstructuraFuncional", tipoParte="Artículo")
 
+        # getListas
         for m in materias:
             self.lista_materias.append(str(m.contents[0]))
 
@@ -65,7 +61,11 @@ class Ley:
             self.lista_parrafos.append(parrafo)
 
         for articulo in articulos:
-            self.lista_articulos.append(articulo)
+            self.lista_articulos.append(str(articulo.Texto.contents[0]).replace("\n", " "))
+
+    def mostrarArticulos(self):
+        for a in self.lista_articulos:
+            print(a)
 
     def mostrarDatos(self):
         print("Ley " + self.idLey)
@@ -73,9 +73,11 @@ class Ley:
         print("Titulo Norma: " + self.tituloNorma)
         print("Organismo: " + self.organismo)
         print("Materias: " + str(self.lista_materias[:]))
-
         print("Cantidad de titulos: " + str(len(self.lista_titulos)))
         print("Cantidad de parrafos: " + str(len(self.lista_parrafos)))
         print("Cantidad de articulos: " + str(len(self.lista_articulos)))
         print("Fecha de promulgación: " + self.promulgacion)
         print("Fecha de publicación: " + self.publicacion)
+        self.mostrarArticulos()
+
+
