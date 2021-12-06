@@ -35,7 +35,7 @@ class Ley:
 
         self.getDatos()
 
-    def getDatos(self):  # Llena los elementos de la Ley
+    def getDatos(self) -> None:  # Llena los elementos de la Ley
         soup = soupConsultarLey(self.idLey)  # Obtener soup
 
         self.tituloNorma = str(soup.find('TituloNorma').contents[0])
@@ -63,11 +63,11 @@ class Ley:
         for articulo in articulos:
             self.lista_articulos.append(str(articulo.Texto.contents[0]).replace("\n", " "))
 
-    def mostrarArticulos(self):
+    def mostrarArticulos(self) -> None:
         for a in self.lista_articulos:
             print(a)
 
-    def mostrarDatos(self):
+    def mostrarDatos(self) -> None:
         print("Ley " + self.idLey)
         print("Norma: " + self.idNorma)
         print("Titulo Norma: " + self.tituloNorma)
