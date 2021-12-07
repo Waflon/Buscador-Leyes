@@ -20,8 +20,10 @@ class Ley:
     tituloNorma: str
     organismo: str
     promulgacion: str
+    txtPromulgacion: str
     publicacion: str
     derogacion: str
+    anexos: str
     lista_titulos: list
     lista_parrafos: list
     lista_articulos: list
@@ -35,6 +37,7 @@ class Ley:
         self.lista_articulos = []
         self.getDatos()  # llenar el resto de elementos
 
+    # Validaciones
     def setTituloNorma(self, soup: BeautifulSoup) -> None:
         try:
             self.tituloNorma = str(soup.find('TituloNorma').contents[0]).replace("\n", " ")
@@ -68,41 +71,40 @@ class Ley:
     def setListaMaterias(self, soup: BeautifulSoup) -> None:
         try:
             materias = soup.find_all("Materias")[0].find_all("Materia")
-            for m in materias:
-                self.lista_materias.append(str(m.contents[0]))
+            self.lista_materias = [(str(m.contents[0])) for m in materias]  # List comprehension
         except:
-            print("Error llenando materias")
+            print("No hay materias para esta ley")
 
     def setListaTitulos(self, titulo: BeautifulSoup) -> None:
         try:
             titulos = titulo.find_all('EstructuraFuncional', tipoParte="Título")
-            for t in titulos:
-                self.lista_titulos.append(str(t.Texto.contents[0]))
+            self.lista_titulos = [t for t in titulos]  # List comprehension
         except:
-            print("Error llenando titulos")
+            print("No hay titulos para esta ley")
 
     def setListaParrafos(self, titulo: BeautifulSoup) -> None:
         try:
             parrafos = titulo.findAll('EstructuraFuncional', tipoParte="Párrafo")
-            for parrafo in parrafos:
-                self.lista_parrafos.append(parrafo)
+            self.lista_parrafos = [parrafo for parrafo in parrafos]  # List comprehension
         except:
-            print("Error llenando parrafos")
+            print("No hay parrafos para esta ley")
 
     def setListaArticulos(self, soup: BeautifulSoup) -> None:
         try:
             articulos = soup.find_all("EstructuraFuncional", tipoParte="Artículo")
-            for articulo in articulos:
-                self.lista_articulos.append(
-                    str(articulo.Texto.contents[0]).replace("\n", " "))  # Evitar saltos de linea
+            self.lista_articulos = [str(articulo.Texto.contents[0]).replace("\n", " ") for articulo in articulos]  # List comprehension
         except:
-            print("Error llenando articulos")
+            print("No hay articulos para esta ley")
 
-    def setDerogacion(self, derogacion: str, fecha: str) ->None:
-        if derogacion == 'no derogado':
-            self.derogacion = derogacion
-        else:
-            self.derogacion = derogacion + " con fecha " + fecha
+    def setDerogacion(self, soup: BeautifulSoup) -> None:
+        try:
+            if str(soup.Promulgacion['derogado']) == 'no derogado':
+                self.derogacion = 'no derogado'
+            else:
+                self.derogacion = "derogado con fecha " + str(soup.Promulgacion["fechaVersion"])
+        except:
+            self.derogacion = "vacio"
+            print("Ley probablemente vacia")
 
     def getDatos(self) -> None:  # Llena los elementos de la Ley
         soup = soupConsultarLey(self.idLey)  # Obtener soup
@@ -116,7 +118,8 @@ class Ley:
         self.setListaTitulos(titulo)
         self.setListaParrafos(titulo)
         self.setListaArticulos(soup)
-        self.setDerogacion(str(soup.Promulgacion['derogado']), str(soup.Promulgacion['fechaVersion']))
+        self.setDerogacion(soup)
+        self.txtPromulgacion = soup.find("Promulgacion").Texto.contents[0]
 
     def mostrarArticulos(self) -> None:
         for a in self.lista_articulos:
@@ -124,14 +127,19 @@ class Ley:
 
     def mostrarDatos(self) -> None:
         print("Ley " + self.idLey)
+        print( "-------------------------------------------------------------------------------------------------------------------------")
         print("Norma: " + self.idNorma)
+        print( "-------------------------------------------------------------------------------------------------------------------------")
         print("Titulo Norma: " + self.tituloNorma)
         print("Organismo: " + self.organismo)
         print("Materias: " + str(self.lista_materias[:]))
+        print( "-------------------------------------------------------------------------------------------------------------------------")
         print("Cantidad de titulos: " + str(len(self.lista_titulos)))
         print("Cantidad de parrafos: " + str(len(self.lista_parrafos)))
         print("Cantidad de articulos: " + str(len(self.lista_articulos)))
-        print("Fecha de promulgación: " + self.promulgacion)
         print("Fecha de publicación: " + self.publicacion)
+        print("Fecha de promulgación: " + self.promulgacion)
         print("Estado: " + self.derogacion)
-
+        print( "-------------------------------------------------------------------------------------------------------------------------")
+        print(f"Promulgación: \n {self.txtPromulgacion}")
+        print( "-------------------------------------------------------------------------------------------------------------------------")
