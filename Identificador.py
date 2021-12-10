@@ -1,6 +1,9 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 git
 =======
+=======
+>>>>>>> Stashed changes
 from dataclasses import dataclass
 from TipoNumero import TipoNumero
 from datetime import datetime
@@ -50,5 +53,9 @@ class Identificador:
         return self.fechaPublicacion
 
     def getFechaPromulgacion(self):
+<<<<<<< Updated upstream
+        return self.fechaPromulgacion
+>>>>>>> Stashed changes
+=======
         return self.fechaPromulgacion
 >>>>>>> Stashed changes

@@ -47,5 +47,9 @@ for i in range(totalTitulosConParrafos):  # totalParrafos es la cantidad de elem
 =======
       lista_articulos.append(a)
 
+<<<<<<< Updated upstream
+print(lista_articulos[22].mostrarDatos())
+>>>>>>> Stashed changes
+=======
 print(lista_articulos[22].mostrarDatos())
 >>>>>>> Stashed changes
