@@ -13,6 +13,7 @@ def soupConsultarLey(idLey: str) -> BeautifulSoup:
         return None
 
 
+
 @dataclass
 class Ley:
     idLey: str
