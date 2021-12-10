@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-
+from Identificador import Identificador
 
 @dataclass
 class Norma:
-    pass
+    idNorma: int
