@@ -43,5 +43,3 @@ for i in range(totalTitulosConParrafos):  # totalParrafos es la cantidad de elem
       a = Articulo(ley, titulo , parrafo, articulo, textoArticulo.contents[0])
       
       lista_articulos.append(a)
-
-print(lista_articulos[0])
