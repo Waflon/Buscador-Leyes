@@ -10,13 +10,18 @@ class Identificador:
     fechaPublicacion: datetime
     fechaPromulgacion: datetime
 
-    def __init__(self, tipoNumero=TipoNumero, organismos=None, fechaPublicacion=None, fechaPromulgacion=None):
+    def __init__(self, tipoNumero=None, organismos=None, fechaPublicacion=None, fechaPromulgacion=None):
         # Validación de datos
-        self.tipoNumero = tipoNumero
+        self.setTipoNumero(tipoNumero)
         self.setOrganismos(organismos)
         self.setFechaPublicacion(fechaPublicacion)
         self.setFechaPromulgacion(fechaPromulgacion)
 
+    def setTipoNumero(self, tipoNumero: TipoNumero):
+        if tipoNumero is None:
+            self.tipoNumero = TipoNumero()  # TipoNumero por defecto
+        else:
+            self.tipoNumero = tipoNumero
 
     def setOrganismos(self, organismos: list):
         if organismos is None:
