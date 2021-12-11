@@ -13,7 +13,6 @@ def soupConsultarLey(idLey: str) -> BeautifulSoup:
         return None
 
 
-
 @dataclass
 class Ley:
     idLey: str
@@ -21,10 +20,9 @@ class Ley:
     tituloNorma: str
     organismo: str
     promulgacion: str
-    txtPromulgacion: str
     publicacion: str
+    txtPromulgacion: str
     derogacion: str
-    anexos: str
     lista_titulos: list
     lista_parrafos: list
     lista_articulos: list
@@ -93,7 +91,8 @@ class Ley:
     def setListaArticulos(self, soup: BeautifulSoup) -> None:
         try:
             articulos = soup.find_all("EstructuraFuncional", tipoParte="Artículo")
-            self.lista_articulos = [str(articulo.Texto.contents[0]).replace("\n", " ") for articulo in articulos]  # List comprehension
+            self.lista_articulos = [str(articulo.Texto.contents[0]).replace("\n", " ") for articulo in
+                                    articulos]  # List comprehension
         except:
             print("No hay articulos para esta ley")
 
@@ -128,19 +127,27 @@ class Ley:
 
     def mostrarDatos(self) -> None:
         print("Ley " + self.idLey)
-        print( "-------------------------------------------------------------------------------------------------------------------------")
+        print(
+            "-------------------------------------------------------------------------------------------------------------------------")
         print("Norma: " + self.idNorma)
-        print( "-------------------------------------------------------------------------------------------------------------------------")
+        print(
+            "-------------------------------------------------------------------------------------------------------------------------")
         print("Titulo Norma: " + self.tituloNorma)
         print("Organismo: " + self.organismo)
         print("Materias: " + str(self.lista_materias[:]))
-        print( "-------------------------------------------------------------------------------------------------------------------------")
+        print(
+            "-------------------------------------------------------------------------------------------------------------------------")
         print("Cantidad de titulos: " + str(len(self.lista_titulos)))
         print("Cantidad de parrafos: " + str(len(self.lista_parrafos)))
         print("Cantidad de articulos: " + str(len(self.lista_articulos)))
         print("Fecha de publicación: " + self.publicacion)
         print("Fecha de promulgación: " + self.promulgacion)
         print("Estado: " + self.derogacion)
-        print( "-------------------------------------------------------------------------------------------------------------------------")
-        print(f"Promulgación: \n {self.txtPromulgacion}")
-        print( "-------------------------------------------------------------------------------------------------------------------------")
+        print(
+            "-------------------------------------------------------------------------------------------------------------------------")
+        print(f"Promulgación: {self.txtPromulgacion}")
+        print(
+            "-------------------------------------------------------------------------------------------------------------------------")
+
+ley = Ley(19880)
+print(ley.mostrarDatos())
