@@ -15,16 +15,28 @@ class Metadato:
         self.setNumeroFuente(numeroFuente)
 
     def setTituloNorma(self, tituloNorma: str):
-        pass
+        if tituloNorma is None:
+            self.tituloNorma = "Titulo Vacio"
+        else:
+            self.tituloNorma = tituloNorma
 
     def setMaterias(self, materias: list):
-        pass
+        if materias is None:
+            self.materias = []
+        else:
+            self.materias = materias
 
     def setIdentificacionFuente(self, identificacionFuente: str):
-        pass
+        if identificacionFuente is None:
+            self.identificacionFuente = "Identificación Fuente no encontrada"
+        else:
+            self.identificacionFuente = identificacionFuente
 
     def setNumeroFuente(self, numeroFuente: str):
-        pass
+        if numeroFuente is None:
+            self.numeroFuente = "Número no encontrado"
+        else:
+            self.numeroFuente =  numeroFuente
 
     def getTituloNorma(self):
         return self.tituloNorma
