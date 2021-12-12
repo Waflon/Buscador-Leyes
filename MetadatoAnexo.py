@@ -10,13 +10,13 @@ class MetadatoAnexo:
         self.setTituloAnexo(tituloAnexo)
         self.setTextoAnexo(textoAnexo)
 
-    def setTituloAnexo(self, tituloAnexo: str):
+    def setTituloAnexo(self, tituloAnexo: str) -> None:
         if tituloAnexo is None:
             self.tituloAnexo = "Título de anexo no encontrado"
         else:
             self.tituloAnexo = tituloAnexo
 
-    def setTextoAnexo(self, textoAnexo: str):
+    def setTextoAnexo(self, textoAnexo: str) -> None:
         if textoAnexo is None:
             self.textoAnexo = "Contenido de anexo no encontrado"
         else:
