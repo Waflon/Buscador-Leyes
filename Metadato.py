@@ -11,7 +11,7 @@ class Metadato:
     def __init__(self, tituloNorma=None, materias=None, identificacionFuente=None, numeroFuente=None):
         self.setTituloNorma(tituloNorma)
         self.setMaterias(materias)
-        self.setIdentificacionFuente()
+        self.setIdentificacionFuente(identificacionFuente)
         self.setNumeroFuente(numeroFuente)
 
     def setTituloNorma(self, tituloNorma: str):
