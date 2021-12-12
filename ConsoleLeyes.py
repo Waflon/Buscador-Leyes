@@ -1,7 +1,15 @@
 from Articulo import Articulo
-from Ley import Ley
+from Parrafo import Parrafo
 
-ley = Ley(20500)
-ley.mostrarDatos()
-#ley.mostrarArticulos()
-articulo = Articulo()
+
+parrafo = Parrafo(20500, ["1","2","b"])
+
+lista = parrafo.getListaArticulos()
+
+print(lista)
+
+a = Articulo(20000)
+
+parrafo.agregarArticulo(a)
+parrafo.agregarArticulo(a)
+print(lista)

@@ -25,8 +25,8 @@ class Anexo:
         else:
             self.metadatoAnexo = metadatoAnexo
 
-    def getFechaVersion(self):
+    def getFechaVersion(self) -> datetime:
         return self.fechaVersion
 
-    def getMetadatoAnexo(self):
+    def getMetadatoAnexo(self) -> MetadatoAnexo:
         return self.metadatoAnexo

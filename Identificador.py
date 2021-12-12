@@ -42,14 +42,14 @@ class Identificador:
             self.fechaPromulgacion = fechaPromulgacion
 
 
-    def getTipoNumero(self):
+    def getTipoNumero(self) -> str:
         return self.tipoNumero
 
-    def getOrganismos(self):
+    def getOrganismos(self) -> list:
         return self.organismos
 
-    def getFechaPublicacion(self):
+    def getFechaPublicacion(self) -> datetime:
         return self.fechaPublicacion
 
-    def getFechaPromulgacion(self):
+    def getFechaPromulgacion(self) -> datetime:
         return self.fechaPromulgacion
