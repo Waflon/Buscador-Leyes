@@ -1,6 +1,8 @@
 from Identificador import Identificador
 from TipoNumero import TipoNumero
 from Metadato import Metadato
+from MetadatoAnexo import MetadatoAnexo
+from Anexo import Anexo
 from Ley import soupConsultarLey
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -54,7 +56,7 @@ fechaPromulgacion = datetime.strptime(fechaPromulgacion_parser, '%Y-%m-%d')
 
 instanciaIdentificador = Identificador(instanciaTipoNumero, organismos, fechaPublicacion, fechaPromulgacion)
 print(instanciaIdentificador)
-
+print("------------------------------------------------------------")
 
 # Metadato
 
@@ -71,3 +73,15 @@ numeroFuente = xml_parser.find('NumeroFuente').contents[0]
 instanciaMetadato = Metadato(tituloNorma, materias, identificacionFuente, numeroFuente)
 
 print(instanciaMetadato)
+print("------------------------------------------------------------")
+
+anexos_parser = xml_parser.Anexos
+listaAnexos = anexos_parser.Anexo
+tituloAnexo = anexos_parser.Anexo.Titulo.contents[0]
+textoAnexo = anexos_parser.Anexo.Texto.contents[0]
+
+fechaVersionAnexo = anexos_parser.find("Anexo")['fechaVersion']
+fechaVersion = datetime.strptime(fechaVersionAnexo, '%Y-%m-%d')
+metadatoAnexo = MetadatoAnexo(tituloAnexo, textoAnexo)
+anexo = Anexo(fechaVersion=fechaVersion, metadatoAnexo=metadatoAnexo)
+print(anexo)
