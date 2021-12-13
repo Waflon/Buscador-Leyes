@@ -6,7 +6,7 @@ from Ley import soupConsultarLey
 lista_titulos = list()
 lista_parrafos = list()
 lista_articulos = list()
-ley = 20000
+ley = 19880
 soup = soupConsultarLey(ley)
 titulos = soup.find_all("EstructuraFuncional",  tipoParte="Título")
 for t in titulos:
@@ -41,5 +41,7 @@ for i in range(totalTitulosConParrafos):  # totalParrafos es la cantidad de elem
       print(textoArticulo.contents[0])
       print("-----------------------------------------------------")
       a = Articulo(ley, titulo , parrafo, articulo, textoArticulo.contents[0])
-      
       lista_articulos.append(a)
+
+print(lista_articulos[22].mostrarDatos())
+
