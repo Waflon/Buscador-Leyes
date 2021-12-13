@@ -1,44 +1,32 @@
 from dataclasses import dataclass
-from bs4 import BeautifulSoup
+
 
 @dataclass
 class Articulo:
-    idLey: str
-    titulo: str
-    parrafo: str
     textoArticulo: str
-    numeroArticulo: str
+    numeroArticulo: int
 
-    def __init__(self, idLey: str, titulo: str, parrafo: str, numeroArticulo: str, textoArticulo: str):
-        self.idLey = str(idLey)
-        self.validarDatos(titulo, parrafo, numeroArticulo, textoArticulo)
-    
-    def setTitulo(self, titulo: str) -> None:
-        if titulo:
-          self.titulo = titulo
+    def __init__(self, numeroArticulo=None, textoArticulo=None) -> None:
+        self.setTextoArticulo(textoArticulo)
+        self.setNumeroArticulo(numeroArticulo)
+
+    def setNumeroArticulo(self, numeroArticulo: int) -> None:
+        if numeroArticulo is None:
+          self.numeroArticulo = 0  # Defecto para error en número de artículo
         else:
-          self.titulo = "Sin Título"
+          self.numeroArticulo = numeroArticulo
 
-    def setParrafo(self, parrafo: str) -> None:
-        if not parrafo:
-          self.parrafo = "Sin Párrafo"
+    def setTextoArticulo(self, textoArticulo: str) -> None:
+        if textoArticulo is None:
+          self.textoArticulo = "Artículo sin texto"
         else:
-          self.parrafo = parrafo
+          self.textoArticulo = textoArticulo
 
-    def validarDatos(self, titulo: str, parrafo: str, numeroArticulo: str, textoArticulo: str) -> None:
-      try:
-        self.setTitulo(titulo)
-        self.setParrafo(parrafo)
-        self.textoArticulo = textoArticulo
-        self.numeroArticulo = numeroArticulo
-      except:
-        print("Error Validando datos")
-        self.textoArticulo = "vacio"
-        self.numeroArticulo = "vacio"
+    def getIdLey(self) -> int:
+      return self.idLey
 
-    def mostrarDatos(self) -> None:
-        print(f"Ley: {self.idLey}")
-        print(self.titulo)
-        print(self.parrafo)
-        print(self.numeroArticulo)
-        print(self.textoArticulo)
+    def getNumeroArticulo(self) -> int:
+      return self.numeroArticulo
+
+    def getTextoArticulo(self) -> str:
+      return self.textoArticulo

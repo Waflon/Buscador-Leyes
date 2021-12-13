@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import requests
 from bs4 import BeautifulSoup
-
+from Articulo import Articulo  # Importar la clase Articulo
 
 def soupConsultarLey(idLey: str) -> BeautifulSoup:
     try:
