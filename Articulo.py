@@ -3,12 +3,10 @@ from dataclasses import dataclass
 
 @dataclass
 class Articulo:
-    idLey: int
     textoArticulo: str
     numeroArticulo: int
 
-    def __init__(self, idLey: str, numeroArticulo=None, textoArticulo=None) -> None:
-        self.idLey = int(idLey)
+    def __init__(self, numeroArticulo=None, textoArticulo=None) -> None:
         self.setTextoArticulo(textoArticulo)
         self.setNumeroArticulo(numeroArticulo)
 

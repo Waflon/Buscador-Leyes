@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from Parrafo import Parrafo
 
 @dataclass
 class Titulo:
@@ -7,7 +7,7 @@ class Titulo:
     numeroTitulo: int
     listaParrafos: list
 
-    def __init__(self, nombreTitulo=None, numeroTitulo=None,listaParrafos=None) -> None:
+    def __init__(self, nombreTitulo=None, numeroTitulo=None, listaParrafos=None) -> None:
         self.setNombreTitulo(nombreTitulo)
         self.setNumeroTitulo(numeroTitulo)
         self.setListaParrafos(listaParrafos)
@@ -38,3 +38,6 @@ class Titulo:
 
     def getListaParrafos(self) -> list:
         return self.listaParaffos
+
+    def agregarParrafo(self, parrafo: Parrafo) -> None:
+        self.listaParrafos.append(parrafo)
