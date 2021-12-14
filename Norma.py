@@ -3,17 +3,17 @@ from Identificador import Identificador
 from Metadato import Metadato
 from Promulgacion import Promulgacion
 from AtributosNorma import AtributoNorma
+from Encabezado import Encabezado
 
 
 @dataclass
 class Norma:
     identificador: Identificador
     metadato: Metadato
-    encabezado: str
-    textoPromulgacion: str
+    encabezado: Encabezado
+    promulgacion: Promulgacion
     listaTitulos: list
     listaAnexos: list
-    listaArticulosTransitorios: list
     archivosBinarios : str
     atributos: AtributoNorma
 
@@ -41,7 +41,7 @@ class Norma:
 
     def setEncabezado(self, encabezado: str) -> None:
         if encabezado is None:
-            self.encabezado = "Encabezado no encontrado"
+            self.encabezado = Encabezado()
         else:
             self.encabezado = encabezado
 
