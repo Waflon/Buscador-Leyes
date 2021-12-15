@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from Identificador import Identificador
 from Metadato import Metadato
 from Promulgacion import Promulgacion
-from AtributosNorma import AtributoNorma
+from AtributosNorma import AtributosNorma
 from Encabezado import Encabezado
 
 
@@ -15,7 +15,7 @@ class Norma:
     listaTitulos: list
     listaAnexos: list
     archivosBinarios : str
-    atributos: AtributoNorma
+    atributos: AtributosNorma
 
     def __init__(self, identificador=None, metadato=None, encabezado=None, promulgacion=None, listaTitulos=None, listaAnexos=None, archivosBinarios=None, atributos=None) -> None:
         self.setIdentificador(identificador)
@@ -39,13 +39,13 @@ class Norma:
         else:
             self.metadato = metadato
 
-    def setEncabezado(self, encabezado: str) -> None:
+    def setEncabezado(self, encabezado: Encabezado) -> None:
         if encabezado is None:
             self.encabezado = Encabezado()
         else:
             self.encabezado = encabezado
 
-    def setPromulgacion(self, promulgacion: str) -> None:
+    def setPromulgacion(self, promulgacion: Promulgacion) -> None:
         if promulgacion is None:
             self.promulgacion = Promulgacion()
         else:
@@ -69,7 +69,7 @@ class Norma:
         else:
             self.archivosBinarios = archivosBinarios
 
-    def setAtributos(self, atributos: AtributoNorma) -> None:
+    def setAtributos(self, atributos: AtributosNorma) -> None:
         if atributos is None:
             self.atributos = {}
         else:
@@ -96,5 +96,5 @@ class Norma:
     def getArchivosBinarios(self) -> str:
         return self.archivosBinarios
 
-    def getAtributos(self) -> AtributoNorma:
+    def getAtributos(self) -> AtributosNorma:
         return self.atributos

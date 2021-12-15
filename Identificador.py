@@ -19,7 +19,7 @@ class Identificador:
 
     def setTipoNumero(self, tipoNumero: TipoNumero):
         if tipoNumero is None:
-            self.tipoNumero = TipoNumero()  # TipoNumero por defecto
+            self.tipoNumero = TipoNumero(None, None)  # TipoNumero por defecto
         else:
             self.tipoNumero = tipoNumero
 

@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass
-class AtributoNorma:
+class AtributosNorma:
     schemaVersion: str
     normaId: str
     fechaVersion: datetime
