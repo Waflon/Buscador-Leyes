@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from AtributosAnexo import AtributosAnexo
+from Encabezado import Encabezado
 from Identificador import Identificador
 from MetadatoAnexo import MetadatoAnexo
 from Promulgacion import Promulgacion
@@ -26,20 +27,6 @@ def soupConsultarLey(idLey: str) -> BeautifulSoup:
 
 @dataclass
 class NormaBuilder:
-    idLey: str
-    norma: Norma
-    def __init__(self, idLey=None) -> None:
-        self.setIdLey(idLey)
-        self.norma = self.crearNormaConLey(idLey)
-
-    def setIdLey(self, idLey: str):
-        if idLey is None:
-            self.idLey = "Ley Vacia"
-        else:
-            self.idLey = idLey
-
-    def getIdLey(self):
-        return self.idLey
 
     def setIdentificador(self, xml_parser: BeautifulSoup) -> Identificador:
         dictIdentificador = getDictIdentificador(xml_parser)
@@ -73,7 +60,6 @@ class NormaBuilder:
         return AtributosNorma(jsonAtributos['SchemaVersion'], jsonAtributos['NormaId'], jsonAtributos['FechaVersion'], jsonAtributos['Derogado'], jsonAtributos['EsTratado'])
 
     def crearNormaConLey(self, idLey: str) -> Norma:
-        idLey = 4808
         xml_parser = soupConsultarLey(idLey)
         identificador = self.setIdentificador(xml_parser) # Identificado
         metadato = self.setMetadato(xml_parser) # Metadato
@@ -91,11 +77,11 @@ class NormaBuilder:
         print("------------------------------------------------------------")
         print(metadato.tituloNorma)
         print("------------------------------------------------------------")
-        print(f"Anexo: \n{anexo.metadatoAnexo.tituloAnexo}")
+        #print(f"Anexo: \n{anexo.metadatoAnexo.tituloAnexo}")
         print("------------------------------------------------------------")
         print("Promulgacion: ")
         print(atributos)
-        return Norma(identificador, metadato)
+        return Norma(identificador, metadato, Encabezado(), promulgacion, [], [], atributos)
 
 def CrearTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
     try:
@@ -109,12 +95,6 @@ def CrearNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para
     except:
         return 0  # Por defecto cuando hay un problema
 
-def getDictTipoNumero(xml_parser: BeautifulSoup) -> dict:  
-    TipoNumero = {
-        'Tipo': CrearTipoLey(xml_parser),  # Retorna un string para dato Tipo
-        'Numero': CrearNumeroLey(xml_parser)  # Retorna un integer para dato Numero
-    }
-    return TipoNumero  
 
 def getJson(dictionary: dict) -> json:  # Retorna un json con el diccionario enviado
     return json.loads(json.dumps(dictionary, indent=4, default=str))  # Con dumps transforma a json y con loads retorna un json
@@ -142,6 +122,14 @@ def CrearFechaPublicacion(identificador_parser: BeautifulSoup) -> datetime:
 def CrearFechaPromulgacion(identificador_parser: BeautifulSoup) -> datetime:
     fechaPromulgacion_parser = identificador_parser['fechaPromulgacion']
     return datetime.strptime(fechaPromulgacion_parser, '%Y-%m-%d')
+
+# Get Dictionaries
+def getDictTipoNumero(xml_parser: BeautifulSoup) -> dict:  
+    TipoNumero = {
+        'Tipo': CrearTipoLey(xml_parser),  # Retorna un string para dato Tipo
+        'Numero': CrearNumeroLey(xml_parser)  # Retorna un integer para dato Numero
+    }
+    return TipoNumero  
 
 def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
     identificador_parser = xml_parser.find('Identificador')
@@ -194,7 +182,6 @@ def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
     }
     return anexo
 
-
 def getDictPromulgacion(xml_parser: BeautifulSoup) -> dict:
     promulgacion_parser = xml_parser.Promulgacion
     texto = xml_parser.Promulgacion.Texto.contents[0]
@@ -221,6 +208,3 @@ def getDictAtributos(xml_parser: BeautifulSoup) -> dict:
         'EsTratado' : esTratado
     }
     return atributos
-
-# Actual Code
-norma = NormaBuilder("20000")
