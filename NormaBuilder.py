@@ -29,14 +29,20 @@ def soupConsultarLey(idLey: str) -> BeautifulSoup:
 class NormaBuilder:
 
     def setIdentificador(self, xml_parser: BeautifulSoup) -> Identificador:
-        dictIdentificador = getDictIdentificador(xml_parser)
-        jsonIdentificador = getJson(dictIdentificador)  # Importante 1/4
-        return Identificador(jsonIdentificador['TipoNumero'], jsonIdentificador['Organismos'], jsonIdentificador['FechaPublicacion'], jsonIdentificador['FechaPromulgacion'])
-
+        try:
+            dictIdentificador = getDictIdentificador(xml_parser)
+            jsonIdentificador = getJson(dictIdentificador)  # Importante 1/4
+            return Identificador(jsonIdentificador['TipoNumero'], jsonIdentificador['Organismos'], jsonIdentificador['FechaPublicacion'], jsonIdentificador['FechaPromulgacion'])
+        except:
+            return Identificador()
+            
     def setMetadato(self, xml_parser: BeautifulSoup) -> Metadato:
-        dictMetadato = getDictMetadato(xml_parser)
-        jsonMetadato = getJson(dictMetadato)    
-        return Metadato(jsonMetadato['Titulo'], jsonMetadato['Materias'], jsonMetadato['IdentificacionFuente'], jsonMetadato['NumeroFuente'])
+        try:
+            dictMetadato = getDictMetadato(xml_parser)
+            jsonMetadato = getJson(dictMetadato)    
+            return Metadato(jsonMetadato['Titulo'], jsonMetadato['Materias'], jsonMetadato['IdentificacionFuente'], jsonMetadato['NumeroFuente'])
+        except:
+            return Metadato()
 
     def setAnexo(self, xml_parser: BeautifulSoup) -> Anexo:
         try:
@@ -52,13 +58,16 @@ class NormaBuilder:
             jsonPromulgacion = getJson(dictPromulgacion)
             return Promulgacion(jsonPromulgacion['Texto'], jsonPromulgacion['FechaVersion'], jsonPromulgacion['Derogado'])
         except:
-            return {}
+            return Promulgacion()
 
     def setAtributos(self, xml_parser: BeautifulSoup) -> AtributosNorma:
-        dictAtributos = getDictAtributos(xml_parser)
-        jsonAtributos = getJson(dictAtributos)
-        return AtributosNorma(jsonAtributos['SchemaVersion'], jsonAtributos['NormaId'], jsonAtributos['FechaVersion'], jsonAtributos['Derogado'], jsonAtributos['EsTratado'])
-
+        try:
+            dictAtributos = getDictAtributos(xml_parser)
+            jsonAtributos = getJson(dictAtributos)
+            return AtributosNorma(jsonAtributos['SchemaVersion'], jsonAtributos['NormaId'], jsonAtributos['FechaVersion'], jsonAtributos['Derogado'], jsonAtributos['EsTratado'])
+        except:
+            return AtributosNorma()
+            
     def crearNormaConLey(self, idLey: str) -> Norma:
         xml_parser = soupConsultarLey(idLey)
         identificador = self.setIdentificador(xml_parser) # Identificado
@@ -66,21 +75,7 @@ class NormaBuilder:
         anexo = self.setAnexo(xml_parser)  # Anexo
         promulgacion = self.setPromulgacion(xml_parser)  # Promulgacion 
         atributos = self.setAtributos(xml_parser)  # Atributos
-        print("---------------------Identificador--------------------------")
-
-        print("   ------------------TipoNumero--------------------------   ")
-        print(f"Norma tipo: {identificador.tipoNumero['Tipo']} \nNúmero: {identificador.tipoNumero['Numero']}")
-        print("   ------------------------------------------------------   ")
-        print(f"Organismos: \n{identificador.organismos}")
-        print(f"Fecha publicacion: \n{identificador.fechaPublicacion}")
-        print(f"Fecha promulgacion: \n{identificador.fechaPromulgacion}")
-        print("------------------------------------------------------------")
-        print(metadato.tituloNorma)
-        print("------------------------------------------------------------")
-        #print(f"Anexo: \n{anexo.metadatoAnexo.tituloAnexo}")
-        print("------------------------------------------------------------")
-        print("Promulgacion: ")
-        print(atributos)
+        
         return Norma(identificador, metadato, Encabezado(), promulgacion, [], [], atributos)
 
 def CrearTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
@@ -99,7 +94,7 @@ def CrearNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para
 def getJson(dictionary: dict) -> json:  # Retorna un json con el diccionario enviado
     return json.loads(json.dumps(dictionary, indent=4, default=str))  # Con dumps transforma a json y con loads retorna un json
 
-def CrearInstanciaTipoNumero(xml_parser: BeautifulSoup) -> TipoNumero:
+def getTipoNumero(xml_parser: BeautifulSoup) -> TipoNumero:
     dictTipoNumero = getDictTipoNumero(xml_parser)
     jsonTipoNumero = getJson(dictTipoNumero)
     try:
@@ -107,7 +102,7 @@ def CrearInstanciaTipoNumero(xml_parser: BeautifulSoup) -> TipoNumero:
     except:
         return TipoNumero()
 
-def CrearOrganismos(identificador_parser: BeautifulSoup) -> list:
+def getOrganismos(identificador_parser: BeautifulSoup) -> list:
     organismos = []
     organismos_parser = identificador_parser.Organismos
     for organismo_parser in organismos_parser:
@@ -115,11 +110,11 @@ def CrearOrganismos(identificador_parser: BeautifulSoup) -> list:
             organismos.append(organismo_parser.contents[0])
     return organismos
 
-def CrearFechaPublicacion(identificador_parser: BeautifulSoup) -> datetime:
+def getFechaPublicacion(identificador_parser: BeautifulSoup) -> datetime:
     fechaPublicacion_parser = identificador_parser['fechaPublicacion']
     return datetime.strptime(fechaPublicacion_parser, '%Y-%m-%d')
 
-def CrearFechaPromulgacion(identificador_parser: BeautifulSoup) -> datetime:
+def getFechaPromulgacion(identificador_parser: BeautifulSoup) -> datetime:
     fechaPromulgacion_parser = identificador_parser['fechaPromulgacion']
     return datetime.strptime(fechaPromulgacion_parser, '%Y-%m-%d')
 
@@ -135,9 +130,9 @@ def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
     identificador_parser = xml_parser.find('Identificador')
     #TipoLey
     tipoNumero = getDictTipoNumero(xml_parser)  # Primeros datos para primer objeto (TipoNumero)
-    organismos = CrearOrganismos(identificador_parser)
-    fechaPublicacion = CrearFechaPublicacion(identificador_parser)
-    fechaPromulgacion = CrearFechaPromulgacion(identificador_parser)
+    organismos = getOrganismos(identificador_parser)
+    fechaPublicacion = getFechaPublicacion(identificador_parser)
+    fechaPromulgacion = getFechaPromulgacion(identificador_parser)
 
     identificador = {
         'TipoNumero' : tipoNumero,
