@@ -34,19 +34,19 @@ class MetadatosNorma:
 
     def setMaterias(self, materias: list) -> None:
         if materias is None:
-            self.materias = "Título de norma no encontrado"
+            self.materias = []
         else:
             self.materias = materias
 
     def setNombresUsoComun(self, nombresUsoComun: list) -> None:
         if nombresUsoComun is None:
-            self.nombresUsoComun = "Nombres de uso común no encontrados"
+            self.nombresUsoComun = []
         else:
             self.nombresUsoComun = nombresUsoComun
 
     def setPaisesTratados(self, paisesTratados: list) -> None:
         if paisesTratados is None:
-            self.paisesTratados = "Paises tratados no encontrados"
+            self.paisesTratados = []
         else:
             self.paisesTratados = paisesTratados
 
