@@ -9,7 +9,7 @@ from Encabezado import Encabezado
 @dataclass
 class Norma:
     identificador: Identificador
-    metadatoNorma: MetadatoNorma
+    metadato: MetadatoNorma
     encabezado: Encabezado
     promulgacion: Promulgacion
     listaTitulos: list
@@ -33,9 +33,9 @@ class Norma:
         else:
             self.identificador = identificador
 
-    def setMetadato(self, metadato: Metadato) -> None:
+    def setMetadato(self, metadato: MetadatoNorma) -> None:
         if metadato is None:
-            self.metadato = Metadato()
+            self.metadato = MetadatoNorma()
         else:
             self.metadato = metadato
 
@@ -78,7 +78,7 @@ class Norma:
     def getIdentificador(self) -> Identificador:
         return self.identificador
 
-    def getMetadato(self) -> Metadato:
+    def getMetadato(self) -> MetadatoNorma:
         return self.metadato
 
     def getEncabezado(self) -> str:
