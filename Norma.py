@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from Identificador import Identificador
-from Metadato import Metadato
+from MetadatoNorma import MetadatoNorma
 from Promulgacion import Promulgacion
 from AtributosNorma import AtributosNorma
 from Encabezado import Encabezado
@@ -9,7 +9,7 @@ from Encabezado import Encabezado
 @dataclass
 class Norma:
     identificador: Identificador
-    metadato: Metadato
+    metadatoNorma: MetadatoNorma
     encabezado: Encabezado
     promulgacion: Promulgacion
     listaTitulos: list
