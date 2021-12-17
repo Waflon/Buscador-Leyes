@@ -43,7 +43,7 @@ class NormaBuilder:
         except:
             return Encabezado()
 
-    def setAnexo(self, xml_parser: BeautifulSoup) -> list:
+    def setListaAnexos(self, xml_parser: BeautifulSoup) -> list:
         try:
             dictAnexo = getDictAnexos(xml_parser)
             jsonAnexo = getJson(dictAnexo)
@@ -75,7 +75,7 @@ class NormaBuilder:
         promulgacion = self.setPromulgacion(xml_parser)  # Promulgacion 
         atributos = self.setAtributos(xml_parser)  # Atributos
         encabezado = self.setEncabezado(xml_parser)
-        return Norma(identificador, metadato, encabezado, promulgacion, [], [listaAnexos], "binarios", atributos)
+        return Norma(identificador, metadato, encabezado, promulgacion, [], listaAnexos, "binarios", atributos)
 
 def CrearTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
     try:
@@ -155,15 +155,12 @@ def getDictMetadatoNorma(xml_parser: BeautifulSoup) -> dict:
 
 def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
     anexos_parser = xml_parser.Anexos
-    listaAnexos = []
-    for anexo in anexos_parser:
-        listaAnexos.append(anexo)
+    texto = xml_parser.Anexos.Anexo.texto
     metadatoAnexo = getDictMetadatoAnexo(anexos_parser)
     # listaAnexos = anexos_parser.Anexo
-    fechaVersionAnexo = anexos_parser.find("Anexo")['fechaVersion']
-    fechaVersion = datetime.strptime(fechaVersionAnexo, '%Y-%m-%d')
+    
     anexo = {
-        'FechaVersion' : fechaVersion,
+        'FechaVersion' : texto,
         'MetadatoAnexo' : metadatoAnexo
     }
     return anexo
