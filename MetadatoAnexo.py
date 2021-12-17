@@ -1,14 +1,17 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
 class MetadatoAnexo:
     tituloAnexo: str
-    textoAnexo: str
+    materias: list
+    fechaDerogacion: datetime
 
-    def __init__(self, tituloAnexo=None, textoAnexo=None):
+    def __init__(self, tituloAnexo=None, materias=None, fechaDerogacion=None):
         self.setTituloAnexo(tituloAnexo)
-        self.setTextoAnexo(textoAnexo)
+        self.setMaterias(materias)
+        self.setFechaDerogacion(fechaDerogacion)
 
     def setTituloAnexo(self, tituloAnexo: str) -> None:
         if tituloAnexo is None:
@@ -16,14 +19,20 @@ class MetadatoAnexo:
         else:
             self.tituloAnexo = tituloAnexo
 
-    def setTextoAnexo(self, textoAnexo: str) -> None:
-        if textoAnexo is None:
-            self.textoAnexo = "Contenido de anexo no encontrado"
+    def setFechaDerogacion(self, fechaDerogacion: datetime) -> None:
+        if fechaDerogacion is None:
+            self.fechaDerogacion = datetime(1800, 1, 1)
         else:
-            self.textoAnexo = textoAnexo
+            self.fechaDerogacion = fechaDerogacion
+
+    def setMaterias(self, materias: list) -> None:
+        if materias is None:
+            self.materias = []
+        else:
+            self.materias = materias
 
     def getTituloAnexo(self) -> str:
         return self.tituloAnexo
 
-    def getTextoAnexo(self) -> str:
-        return self.textoAnexo
+    def setFechaDerogacion(self) -> datetime:
+        return self.fechaDerogacion

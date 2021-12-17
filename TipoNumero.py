@@ -23,7 +23,6 @@ class TipoNumero:
         else:
             self.numeroNorma = int(numeroNorma)
 
-
     def getTipoNorma(self) -> str:
         return self.tipoNorma
 
