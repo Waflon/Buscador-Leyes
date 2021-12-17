@@ -1,17 +1,8 @@
-from dataclasses import dataclass
-from AtributosAnexo import AtributosAnexo
-from Encabezado import Encabezado
-from Identificador import Identificador
-from MetadatoAnexo import MetadatoAnexo
-from Promulgacion import Promulgacion
-from AtributosNorma import AtributosNorma
 from TipoNumero import TipoNumero
-from Metadato import Metadato
-from Titulo import Titulo
-from Anexo import Anexo
-from Norma import Norma
+from Anexo import *
+from Titulo import *
+from Norma import *
 from bs4 import BeautifulSoup
-from datetime import datetime
 import requests
 import json
 
@@ -36,15 +27,23 @@ class NormaBuilder:
         except:
             return Identificador()
             
-    def setMetadato(self, xml_parser: BeautifulSoup) -> Metadato:
+    def setMetadatoNorma(self, xml_parser: BeautifulSoup) -> MetadatoNorma:
         try:
-            dictMetadato = getDictMetadato(xml_parser)
-            jsonMetadato = getJson(dictMetadato)    
-            return Metadato(jsonMetadato['Titulo'], jsonMetadato['Materias'], jsonMetadato['IdentificacionFuente'], jsonMetadato['NumeroFuente'])
+            dictMetadatoNorma = getDictMetadatoNorma(xml_parser)
+            jsonMetadatoNorma = getJson(dictMetadatoNorma)    
+            return MetadatoNorma(jsonMetadatoNorma['Titulo'], jsonMetadatoNorma['Materias'], jsonMetadatoNorma['IdentificacionFuente'], jsonMetadatoNorma['NumeroFuente'])
         except:
-            return Metadato()
+            return MetadatoNorma()
 
-    def setAnexo(self, xml_parser: BeautifulSoup) -> Anexo:
+    def setEncabezado(self, xml_parser: BeautifulSoup) -> Encabezado:
+        try:
+            dictEncabezado = getDictEncabezado(xml_parser)
+            jsonEncabezado = getJson(dictEncabezado)
+            return Encabezado(jsonEncabezado['Texto'], jsonEncabezado['FechaVersion'], jsonEncabezado['Derogado'])
+        except:
+            return Encabezado()
+
+    def setAnexo(self, xml_parser: BeautifulSoup) -> list:
         try:
             dictAnexo = getDictAnexos(xml_parser)
             jsonAnexo = getJson(dictAnexo)
@@ -62,7 +61,7 @@ class NormaBuilder:
 
     def setAtributos(self, xml_parser: BeautifulSoup) -> AtributosNorma:
         try:
-            dictAtributos = getDictAtributos(xml_parser)
+            dictAtributos = getDictAtributosNorma(xml_parser)
             jsonAtributos = getJson(dictAtributos)
             return AtributosNorma(jsonAtributos['SchemaVersion'], jsonAtributos['NormaId'], jsonAtributos['FechaVersion'], jsonAtributos['Derogado'], jsonAtributos['EsTratado'])
         except:
@@ -71,12 +70,12 @@ class NormaBuilder:
     def crearNormaConLey(self, idLey: str) -> Norma:
         xml_parser = soupConsultarLey(idLey)
         identificador = self.setIdentificador(xml_parser) # Identificado
-        metadato = self.setMetadato(xml_parser) # Metadato
-        anexo = self.setAnexo(xml_parser)  # Anexo
+        metadato = self.setMetadatoNorma(xml_parser) # Metadato
+        listaAnexos = self.setListaAnexos(xml_parser)  # Anexo
         promulgacion = self.setPromulgacion(xml_parser)  # Promulgacion 
         atributos = self.setAtributos(xml_parser)  # Atributos
-        
-        return Norma(identificador, metadato, Encabezado(), promulgacion, [], [], atributos)
+        encabezado = self.setEncabezado(xml_parser)
+        return Norma(identificador, metadato, encabezado, promulgacion, [], [listaAnexos], "binarios", atributos)
 
 def CrearTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
     try:
@@ -89,7 +88,6 @@ def CrearNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para
         return xml_parser.find('Numero').contents[0]
     except:
         return 0  # Por defecto cuando hay un problema
-
 
 def getJson(dictionary: dict) -> json:  # Retorna un json con el diccionario enviado
     return json.loads(json.dumps(dictionary, indent=4, default=str))  # Con dumps transforma a json y con loads retorna un json
@@ -110,14 +108,6 @@ def getOrganismos(identificador_parser: BeautifulSoup) -> list:
             organismos.append(organismo_parser.contents[0])
     return organismos
 
-def getFechaPublicacion(identificador_parser: BeautifulSoup) -> datetime:
-    fechaPublicacion_parser = identificador_parser['fechaPublicacion']
-    return datetime.strptime(fechaPublicacion_parser, '%Y-%m-%d')
-
-def getFechaPromulgacion(identificador_parser: BeautifulSoup) -> datetime:
-    fechaPromulgacion_parser = identificador_parser['fechaPromulgacion']
-    return datetime.strptime(fechaPromulgacion_parser, '%Y-%m-%d')
-
 # Get Dictionaries
 def getDictTipoNumero(xml_parser: BeautifulSoup) -> dict:  
     TipoNumero = {
@@ -131,8 +121,8 @@ def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
     #TipoLey
     tipoNumero = getDictTipoNumero(xml_parser)  # Primeros datos para primer objeto (TipoNumero)
     organismos = getOrganismos(identificador_parser)
-    fechaPublicacion = getFechaPublicacion(identificador_parser)
-    fechaPromulgacion = getFechaPromulgacion(identificador_parser)
+    fechaPublicacion = datetime.strptime(xml_parser.Identificador['fechaPublicacion'], '%Y-%m-%d')
+    fechaPromulgacion = datetime.strptime(xml_parser.Identificador['fechaPromulgacion'], '%Y-%m-%d')
 
     identificador = {
         'TipoNumero' : tipoNumero,
@@ -141,7 +131,7 @@ def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
         'FechaPromulgacion': fechaPromulgacion}
     return identificador
 
-def getDictMetadato(xml_parser: BeautifulSoup) -> dict:
+def getDictMetadatoNorma(xml_parser: BeautifulSoup) -> dict:
     metadatos_parser = xml_parser.Metadatos
     tituloNorma = metadatos_parser.TituloNorma.contents[0]
     materias = []
@@ -165,22 +155,31 @@ def getDictMetadato(xml_parser: BeautifulSoup) -> dict:
 
 def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
     anexos_parser = xml_parser.Anexos
-    listaAnexos = anexos_parser.Anexo
-    tituloAnexo = anexos_parser.Anexo.Titulo.contents[0]
-    textoAnexo = anexos_parser.Anexo.Texto.contents[0]
+    listaAnexos = []
+    for anexo in anexos_parser:
+        listaAnexos.append(anexo)
+    metadatoAnexo = getDictMetadatoAnexo(anexos_parser)
+    # listaAnexos = anexos_parser.Anexo
     fechaVersionAnexo = anexos_parser.find("Anexo")['fechaVersion']
     fechaVersion = datetime.strptime(fechaVersionAnexo, '%Y-%m-%d')
-    metadatoAnexo = MetadatoAnexo(tituloAnexo, textoAnexo)
     anexo = {
         'FechaVersion' : fechaVersion,
-        'MetadatoAnexo' : {'Titulo' : tituloAnexo, 'Texto': textoAnexo}
+        'MetadatoAnexo' : metadatoAnexo
     }
     return anexo
 
-def getDictPromulgacion(xml_parser: BeautifulSoup) -> dict:
-    promulgacion_parser = xml_parser.Promulgacion
+def getDictMetadatoAnexo(self, anexos_parser: BeautifulSoup) -> dict:
+    tituloAnexo = anexos_parser.Anexo.Titulo.contents[0]
+    textoAnexo = anexos_parser.Anexo.Texto.contents[0]
+    metadatoAnexo ={
+        'tituloAnexo' : tituloAnexo,
+        'textoAnexo'  : textoAnexo
+    }
+    return metadatoAnexo
+
+def getDictPromulgacion (xml_parser: BeautifulSoup) -> dict:
     texto = xml_parser.Promulgacion.Texto.contents[0]
-    fechaVersion = xml_parser.Promulgacion['fechaVersion']
+    fechaVersion = datetime.strptime(xml_parser.Promulgacion['fechaVersion'], '%Y-%m-%d')
     derogado = xml_parser.Promulgacion['derogado']
     promulgacion = {
         'Texto' : texto,
@@ -189,10 +188,10 @@ def getDictPromulgacion(xml_parser: BeautifulSoup) -> dict:
     }
     return promulgacion
 
-def getDictAtributos(xml_parser: BeautifulSoup) -> dict:
+def getDictAtributosNorma(xml_parser: BeautifulSoup) -> dict:
     schemaVersion = xml_parser.Norma['SchemaVersion']
     normaId = xml_parser.Norma['normaId']
-    fechaVersion = xml_parser.Norma['fechaVersion']
+    fechaVersion = datetime.strptime(xml_parser.Norma['fechaVersion'], '%Y-%m-%d')
     derogado = xml_parser.Norma['derogado']
     esTratado = xml_parser.Norma['esTratado']
     atributos = {
@@ -203,3 +202,20 @@ def getDictAtributos(xml_parser: BeautifulSoup) -> dict:
         'EsTratado' : esTratado
     }
     return atributos
+
+def getDictEncabezado(xml_parser: BeautifulSoup) -> dict:
+    texto = xml_parser.Encabezado.Texto.contents[0]
+    fechaVersion = datetime.strptime(xml_parser.Encabezado['fechaVersion'], '%Y-%m-%d')
+    derogado = xml_parser.Encabezado['derogado']
+    encabezado = {
+        'Texto' : texto,
+        'FechaVersion' : fechaVersion,
+        'Derogado' : derogado
+    }
+    return encabezado
+
+def getDictAtributosAnexo(xml_parser: BeautifulSoup) -> dict:
+    idParte: str
+    fechaVersion: datetime
+    derogado: str
+    transitorio: str

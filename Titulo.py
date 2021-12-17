@@ -1,16 +1,22 @@
-from dataclasses import dataclass
-from Parrafo import Parrafo
+from Parrafo import *
 
 @dataclass
 class Titulo:
+    numeroTitulo: str
     nombreTitulo: str
-    numeroTitulo: int
     listaParrafos: list
 
-    def __init__(self, nombreTitulo=None, numeroTitulo=None, listaParrafos=None) -> None:
+    def __init__(self, numeroTitulo=None, nombreTitulo=None, listaParrafos=None) -> None:
         self.setNombreTitulo(nombreTitulo)
         self.setNumeroTitulo(numeroTitulo)
+        self.listaParrafos = []
         self.setListaParrafos(listaParrafos)
+
+    def setNumeroTitulo(self, numeroTitulo: str) -> None:
+        if numeroTitulo is None:
+            self.numeroTitulo = "Sin Número"
+        else:
+            self.numeroTitulo = numeroTitulo
 
     def setNombreTitulo(self, nombreTitulo: str) -> None:
         if nombreTitulo is None:
@@ -18,23 +24,17 @@ class Titulo:
         else:
             self.nombreTitulo = nombreTitulo
 
-    def setNumeroTitulo(self, numeroTitulo: int) -> None:
-        if numeroTitulo is None:
-            self.numeroTitulo = "Sin Número"
-        else:
-            self.numeroTitulo = numeroTitulo
-
-    def setListaParrafos(self, listaParrafos: str) -> None:
+    def setListaParrafos(self, listaParrafos: list) -> None:
         if listaParrafos is None:
             self.listaParrafos = []
         else:
             self.listaParrafos = listaParrafos
 
+    def getNumeroTitulo(self) -> str:
+        return self.numeroTitulo
+
     def getNombreTitulo(self) -> str:
         return self.nombreTitulo
-
-    def getNumeroTitulo(self) -> int:
-        return self.numeroTitulo
 
     def getListaParrafos(self) -> list:
         return self.listaParaffos
