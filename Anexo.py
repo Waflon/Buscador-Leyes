@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from MetadatoAnexo import MetadatoAnexo
 from datetime import datetime
-from AtributosAnexo import AtributosAnexo
 
 @dataclass
 class Anexo:

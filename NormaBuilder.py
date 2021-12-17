@@ -47,9 +47,9 @@ class NormaBuilder:
         try:
             dictAnexo = getDictAnexos(xml_parser)
             jsonAnexo = getJson(dictAnexo)
-            return Anexo(jsonAnexo['FechaVersion'], jsonAnexo['MetadatoAnexo'] )
+            return [Anexo(jsonAnexo['Texto'], jsonAnexo['MetadatoAnexo'],jsonAnexo['IdParte'], jsonAnexo['FechaVersion'], jsonAnexo['Derogado'], jsonAnexo['Transitorio'] )]
         except:
-            return Anexo()
+            return [Anexo()]
 
     def setPromulgacion(self, xml_parser: BeautifulSoup) ->Promulgacion:
         try:
@@ -156,12 +156,19 @@ def getDictMetadatoNorma(xml_parser: BeautifulSoup) -> dict:
 def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
     anexos_parser = xml_parser.Anexos
     texto = xml_parser.Anexos.Anexo.texto
+    idParte = xml_parser.Anexos.Anexo['idParte']
+    fechaVersion: xml_parser.Anexos.Anexo['fechaVersion']
+    derogado: xml_parser.Anexos.Anexo['derogado']
+    transitorio: xml_parser.Anexos.Anexo['transitorio']
     metadatoAnexo = getDictMetadatoAnexo(anexos_parser)
-    # listaAnexos = anexos_parser.Anexo
-    
+
     anexo = {
-        'FechaVersion' : texto,
-        'MetadatoAnexo' : metadatoAnexo
+        'Texto' : texto,
+        'MetadatoAnexo' : metadatoAnexo,
+        'IdParte' : idParte,
+        'FechaVersion' : fechaVersion,
+        'Derogado' : derogado,
+        'Transitorio' : transitorio
     }
     return anexo
 
@@ -211,8 +218,6 @@ def getDictEncabezado(xml_parser: BeautifulSoup) -> dict:
     }
     return encabezado
 
-def getDictAtributosAnexo(xml_parser: BeautifulSoup) -> dict:
-    idParte: str
-    fechaVersion: datetime
-    derogado: str
-    transitorio: str
+b = NormaBuilder()
+
+norma = b.crearNormaConLey(21395)
