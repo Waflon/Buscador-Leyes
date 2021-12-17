@@ -154,14 +154,27 @@ def getDictMetadatoNorma(xml_parser: BeautifulSoup) -> dict:
     return metadato
 
 def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
-    anexos_parser = xml_parser.Anexos
-    texto = xml_parser.Anexos.Anexo.texto
-    idParte = xml_parser.Anexos.Anexo['idParte']
-    fechaVersion: xml_parser.Anexos.Anexo['fechaVersion']
-    derogado: xml_parser.Anexos.Anexo['derogado']
-    transitorio: xml_parser.Anexos.Anexo['transitorio']
-    metadatoAnexo = getDictMetadatoAnexo(anexos_parser)
-
+    try:
+        texto = xml_parser.Anexos.Anexo.Texto.contents[0]
+    except:
+        texto = None
+    try:
+        idParte = xml_parser.Anexos.Anexo['idParte']
+    except:
+        idParte = None
+    try:
+        fechaVersion = datetime.strptime(xml_parser.Anexos.Anexo['fechaVersionAnexo'], '%Y-%m-%d')
+    except:
+        fechaVersion = None
+    try:
+        derogado = xml_parser.Anexos.Anexo['derogado']
+    except:
+        derogado = None
+    try:
+        transitorio = xml_parser.Anexos.Anexo['transitorio']
+    except:
+        transitorio = None
+    metadatoAnexo = getDictMetadatoAnexo(xml_parser)
     anexo = {
         'Texto' : texto,
         'MetadatoAnexo' : metadatoAnexo,
@@ -172,12 +185,31 @@ def getDictAnexos(xml_parser: BeautifulSoup) -> dict:
     }
     return anexo
 
-def getDictMetadatoAnexo(self, anexos_parser: BeautifulSoup) -> dict:
-    tituloAnexo = anexos_parser.Anexo.Titulo.contents[0]
-    textoAnexo = anexos_parser.Anexo.Texto.contents[0]
+def getDictMetadatoAnexo(xml_parser: BeautifulSoup) -> dict:
+    #Titulo Anexo
+    try:
+        tituloAnexo = xml_parser.Anexo.Titulo.contents[0]
+    except:
+        tituloAnexo = ""
+    #Lista Materias
+    try:
+        listaMaterias = []
+        materias_parser = xml_parser.Anexo.Materias
+        for materia in materias_parser:
+            if materia != "\n":
+                listaMaterias.append(materia.contents[0])
+    except:
+        listaMaterias = []
+    #Fecha Derogacion
+    try:
+        fechaDerogacion = datetime.strptime(xml_parser.Anexo['fechaDerogacion'], '%Y-%m-%d')
+    except:
+        fechaDerogacion = datetime(1800,1,1)
+    
     metadatoAnexo ={
         'tituloAnexo' : tituloAnexo,
-        'textoAnexo'  : textoAnexo
+        'Materias'  : listaMaterias,
+        'fechaDerogacion' : fechaDerogacion
     }
     return metadatoAnexo
 
@@ -220,4 +252,4 @@ def getDictEncabezado(xml_parser: BeautifulSoup) -> dict:
 
 b = NormaBuilder()
 
-norma = b.crearNormaConLey(21395)
+norma = b.crearNormaConLey(20000)
