@@ -9,26 +9,22 @@ class Titulo:
     def __init__(self, numeroTitulo=None, nombreTitulo=None, listaParrafos=None) -> None:
         self.setNombreTitulo(nombreTitulo)
         self.setNumeroTitulo(numeroTitulo)
-        self.listaParrafos = []
         self.setListaParrafos(listaParrafos)
 
     def setNumeroTitulo(self, numeroTitulo: str) -> None:
         if numeroTitulo is None:
             self.numeroTitulo = "Sin Número"
-        else:
-            self.numeroTitulo = numeroTitulo
+        self.numeroTitulo = numeroTitulo
 
     def setNombreTitulo(self, nombreTitulo: str) -> None:
         if nombreTitulo is None:
             self.nombreTitulo = "Sin Título"
-        else:
-            self.nombreTitulo = nombreTitulo
+        self.nombreTitulo = nombreTitulo
 
     def setListaParrafos(self, listaParrafos: list) -> None:
         if listaParrafos is None:
             self.listaParrafos = []
-        else:
-            self.listaParrafos = listaParrafos
+        self.listaParrafos = listaParrafos
 
     def getNumeroTitulo(self) -> str:
         return self.numeroTitulo

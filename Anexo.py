@@ -1,6 +1,5 @@
-from dataclasses import dataclass
-from MetadatoAnexo import MetadatoAnexo
-from datetime import datetime
+from MetadatoAnexo import *
+
 
 @dataclass
 class Anexo:
@@ -22,9 +21,8 @@ class Anexo:
 
     def setTexto(self, texto: str) -> None:
         if texto is None:
-            self.texto = "Texto no encontrado"
-        else:
-            self.texto = texto
+            self.texto = "Texto Anexo no encontrado"
+        self.texto = texto
 
     def setMetadatoAnexo(self, metadatoAnexo: MetadatoAnexo) -> None:
         if metadatoAnexo is None:
@@ -34,7 +32,7 @@ class Anexo:
 
     def setIdParte(self, idParte: str) -> None:
         if idParte is None:
-            self.idParte = 0  # Error por defecto
+            self.idParte = "0"  # Error por defecto
         else:
             self.idParte = idParte
 
@@ -46,13 +44,13 @@ class Anexo:
 
     def setDerogado(self, derogado: str) -> None:
         if derogado is None:
-            self.derogado = "desconocido"
+            self.derogado = "derogado: desconocido"
         else:
             self.derogado = derogado
 
     def setTransitorio(self, transitorio: str) -> None:
         if transitorio is None:
-            self.transitorio = "desconocido"
+            self.transitorio = "transitorio: desconocido"
         else:
             self.transitorio = transitorio
 
