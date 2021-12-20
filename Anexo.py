@@ -15,7 +15,7 @@ class Anexo:
         self.setTexto(texto)
         self.setMetadatoAnexo(metadatoAnexo)
         self.setIdParte(idParte)
-        self.setFechaVerision(fechaVersion)
+        self.setFechaVersion(fechaVersion)
         self.setDerogado(derogado)
         self.setTransitorio(transitorio)
 
@@ -36,7 +36,7 @@ class Anexo:
         else:
             self.idParte = idParte
 
-    def setFechaVerision(self, fechaVersion: datetime) -> None:
+    def setFechaVersion(self, fechaVersion: datetime) -> None:
         if fechaVersion is None:
             self.fechaVersion = datetime(1800,1,1)
         else:
