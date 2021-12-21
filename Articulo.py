@@ -1,44 +1,39 @@
-from dataclasses import dataclass
-from bs4 import BeautifulSoup
+from MetadatoArticulo import *
 
 @dataclass
 class Articulo:
-    idLey: str
-    titulo: str
-    parrafo: str
     textoArticulo: str
-    numeroArticulo: str
+    metadatosArticulo: MetadatoArticulo
+    idParte: str  #Elemento unico usado por la BCN en sus servicios
 
-    def __init__(self, idLey: str, titulo: str, parrafo: str, numeroArticulo: str, textoArticulo: str):
-        self.idLey = str(idLey)
-        self.validarDatos(titulo, parrafo, numeroArticulo, textoArticulo)
-    
-    def setTitulo(self, titulo: str) -> None:
-        if titulo:
-          self.titulo = titulo
+    def __init__(self, textoArticulo=None, metadatosArticulo=None, idParte=None) -> None:
+        self.setTextoArticulo(textoArticulo)
+        self.setMetadatosArticulo(metadatosArticulo)
+        self.setIdParte(idParte)
+
+    def setIdParte(self, idParte: int) -> None:
+        if idParte is None:
+          self.idParte = "0"  # Defecto para error en número de artículo
         else:
-          self.titulo = "Sin Título"
+          self.idParte = idParte
 
-    def setParrafo(self, parrafo: str) -> None:
-        if not parrafo:
-          self.parrafo = "Sin Párrafo"
+    def setTextoArticulo(self, textoArticulo: str) -> None:
+        if textoArticulo is None:
+          self.textoArticulo = "Artículo sin texto"
         else:
-          self.parrafo = parrafo
+          self.textoArticulo = textoArticulo
 
-    def validarDatos(self, titulo: str, parrafo: str, numeroArticulo: str, textoArticulo: str) -> None:
-      try:
-        self.setTitulo(titulo)
-        self.setParrafo(parrafo)
-        self.textoArticulo = textoArticulo
-        self.numeroArticulo = numeroArticulo
-      except:
-        print("Error Validando datos")
-        self.textoArticulo = "vacio"
-        self.numeroArticulo = "vacio"
+    def setMetadatosArticulo(self, metadatosArticulo: MetadatoArticulo) -> None:
+        if metadatosArticulo is None:
+          self.metadatosArticulo = MetadatoArticulo()
+        else:
+          self.metadatosArticulo = metadatosArticulo
 
-    def mostrarDatos(self) -> None:
-        print(f"Ley: {self.idLey}")
-        print(self.titulo)
-        print(self.parrafo)
-        print(self.numeroArticulo)
-        print(self.textoArticulo)
+    def getIdParte(self) -> str:
+      return self.idParte
+
+    def getTextoArticulo(self) -> str:
+      return self.textoArticulo
+
+    def getMetadatosArticulo(self) -> MetadatoArticulo:
+      return self.metadatosArticulo
