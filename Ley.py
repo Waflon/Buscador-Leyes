@@ -148,6 +148,3 @@ class Ley:
         print(f"Promulgación: {self.txtPromulgacion}")
         print(
             "-------------------------------------------------------------------------------------------------------------------------")
-
-ley = Ley(19880)
-print(ley.mostrarDatos())

@@ -2,12 +2,26 @@ from bs4 import BeautifulSoup
 from Articulo import Articulo
 from Ley import Ley
 from Ley import soupConsultarLey
+import requests
+import lxml
 
+
+idLey = 20000
+url = 'http://www.leychile.cl/Consulta/obtxml?opt=7&idLey=' + str(idLey)
+xml_data = requests.get(url).content  # Conseguir el contenido en xml
+print(f"Solicitud exitosa para ley: {str(idLey)}")
+soup = BeautifulSoup(xml_data, "lxml")
+print(soup)
+
+
+
+'''
 lista_titulos = list()
 lista_parrafos = list()
 lista_articulos = list()
 ley = 20000
 soup = soupConsultarLey(ley)
+print(soup)
 titulos = soup.find_all("EstructuraFuncional",  tipoParte="Título")
 for t in titulos:
   lista_titulos.append(t)
@@ -43,3 +57,4 @@ for i in range(totalTitulosConParrafos):  # totalParrafos es la cantidad de elem
       a = Articulo(ley, titulo , parrafo, articulo, textoArticulo.contents[0])
       
       lista_articulos.append(a)
+      '''
