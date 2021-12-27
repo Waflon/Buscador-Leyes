@@ -16,21 +16,27 @@ class Norma:
     archivosBinarios : str
     atributos: AtributosNorma
 
-    def __init__(self, identificador=None, metadato=None, encabezado=None, promulgacion=None, listaTitulos=None, listaAnexos=None, archivosBinarios=None, atributos=None) -> None:
+    def __init__(self, atributos=None, identificador=None, metadato=None, encabezado=None, promulgacion=None,  listaAnexos=None, archivosBinarios=None, listaTitulos=None ) -> None:
         self.setIdentificador(identificador)
+        self.setAtributos(atributos)
         self.setMetadato(metadato)
         self.setEncabezado(encabezado)
         self.setPromulgacion(promulgacion)
         self.setListaTitulos(listaTitulos)
         self.setListaAnexos(listaAnexos)
         self.setArchivosBinarios(archivosBinarios)
-        self.setAtributos(atributos)
 
     def setIdentificador(self, identificador: Identificador) -> None:
         if identificador is None:
             self.identificador = Identificador()  # Identificador por defecto
         else:
             self.identificador = identificador
+       
+    def setArchivosBinarios(self, archivosBinarios: str) ->None:
+        if archivosBinarios is None:
+            self.archivosBinarios = "Vacios"
+        else:
+            self.archivosBinarios = archivosBinarios
 
     def setMetadato(self, metadato: MetadatoNorma) -> None:
         if metadato is None:
@@ -61,12 +67,6 @@ class Norma:
             self.listaAnexos = []
         else:
             self.listaAnexos = listaAnexos
-       
-    def setArchivosBinarios(self, archivosBinarios: str) ->None:
-        if archivosBinarios is None:
-            self.archivosBinarios = "Vacios"
-        else:
-            self.archivosBinarios = archivosBinarios
 
     def setAtributos(self, atributos: AtributosNorma) -> None:
         if atributos is None:

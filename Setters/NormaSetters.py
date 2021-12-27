@@ -94,7 +94,6 @@ def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
     #TipoLey
     dictTipoNumero = getDictTipoNumero(xml_parser)  # Primeros datos para primer objeto (TipoNumero)
     instanciaTipoNumero = TipoNumero(dictTipoNumero['Tipo'], dictTipoNumero['Numero'])
-    print(instanciaTipoNumero)
     organismos = getOrganismos(identificador_parser)
     fechaPublicacion = datetime.strptime(xml_parser.Identificador['fechaPublicacion'], '%Y-%m-%d')
     fechaPromulgacion = datetime.strptime(xml_parser.Identificador['fechaPromulgacion'], '%Y-%m-%d')
