@@ -39,7 +39,7 @@ def setListaAnexos(xml_parser: BeautifulSoup) -> list:
     try:
         dictAnexo = getDictAnexos(xml_parser)
         jsonAnexo = getJson(dictAnexo)
-        return [Anexo(jsonAnexo['Texto'], jsonAnexo['MetadatoAnexo'],jsonAnexo['IdParte'], jsonAnexo['FechaVersion'], jsonAnexo['Derogado'], jsonAnexo['Transitorio'] )]
+        return [Anexo(jsonAnexo['Texto'], jsonAnexo['MetadatoAnexo'] ,jsonAnexo['IdParte'], jsonAnexo['FechaVersion'], jsonAnexo['Derogado'], jsonAnexo['Transitorio'] )]
     except:
         return [Anexo()]
 
@@ -70,13 +70,13 @@ def soupConsultarLey(idLey: str) -> BeautifulSoup:
 
 '''----------------------IDENTIFICADOR-------------------------------'''
 
-def CrearTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
+def setTipoLey(xml_parser: BeautifulSoup) -> str:  # Retorna string para el Tipo de Ley
     try:
         return xml_parser.find('Tipo').contents[0]
     except:
         return "Ley"
 
-def CrearNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para dato Numero
+def setNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para dato Numero
     try:
         return xml_parser.find('Numero').contents[0]
     except:
@@ -84,21 +84,23 @@ def CrearNumeroLey(xml_parser: BeautifulSoup) -> int:  # Retorna un Integer para
 
 def getDictTipoNumero(xml_parser: BeautifulSoup) -> dict:  
     TipoNumero = {
-        'Tipo': CrearTipoLey(xml_parser),  # Retorna un string para dato Tipo
-        'Numero': CrearNumeroLey(xml_parser)  # Retorna un integer para dato Numero
+        'Tipo': setTipoLey(xml_parser),  # Retorna un string para dato Tipo
+        'Numero': setNumeroLey(xml_parser)  # Retorna un integer para dato Numero
     }
     return TipoNumero  
 
 def getDictIdentificador(xml_parser: BeautifulSoup) -> dict:
     identificador_parser = xml_parser.find('Identificador')
     #TipoLey
-    tipoNumero = getDictTipoNumero(xml_parser)  # Primeros datos para primer objeto (TipoNumero)
+    dictTipoNumero = getDictTipoNumero(xml_parser)  # Primeros datos para primer objeto (TipoNumero)
+    instanciaTipoNumero = TipoNumero(dictTipoNumero['Tipo'], dictTipoNumero['Numero'])
+    print(instanciaTipoNumero)
     organismos = getOrganismos(identificador_parser)
     fechaPublicacion = datetime.strptime(xml_parser.Identificador['fechaPublicacion'], '%Y-%m-%d')
     fechaPromulgacion = datetime.strptime(xml_parser.Identificador['fechaPromulgacion'], '%Y-%m-%d')
 
     identificador = {
-        'TipoNumero' : tipoNumero,
+        'TipoNumero' : instanciaTipoNumero,
         'Organismos' : organismos,
         'FechaPublicacion' : fechaPublicacion,
         'FechaPromulgacion': fechaPromulgacion}
@@ -160,9 +162,9 @@ def getDictMetadatoAnexo(xml_parser: BeautifulSoup) -> dict:
         fechaDerogacion = datetime(1800,1,1)
     
     metadatoAnexo ={
-        'tituloAnexo' : tituloAnexo,
+        'TituloAnexo' : tituloAnexo,
         'Materias'  : listaMaterias,
-        'fechaDerogacion' : fechaDerogacion
+        'FechaDerogacion' : fechaDerogacion
     }
     return metadatoAnexo
 

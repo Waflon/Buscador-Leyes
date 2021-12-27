@@ -5,7 +5,6 @@ from Promulgacion import Promulgacion
 from AtributosNorma import AtributosNorma
 from Encabezado import Encabezado
 
-
 @dataclass
 class Norma:
     identificador: Identificador

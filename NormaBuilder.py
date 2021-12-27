@@ -14,3 +14,5 @@ def crearNormaConLey(idLey: str) -> Norma:
 
 
 norma = crearNormaConLey(4808)
+print(norma)
+
